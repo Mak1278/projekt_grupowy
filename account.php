@@ -117,43 +117,43 @@ if (@$_GET['q'] == 3)
 
 <?php
 if (@$_GET['q'] == 1) {
-	
 	/*
+	
 	if(isset($_POST['Wyb_kat'])){
     $Wyb_kat = $_POST['Wyb_kat'];
 	
 	
-	//echo 'account.php?q=1&kat='. $Wyb_kat .'></a>';
+	echo 'account.php?q=1&kat='. $Wyb_kat .'></a>';
 	
     if($Wyb_kat=='Zadna') {
             echo 'zadna byku<br/>';
 	}
 	elseif ($Wyb_kat=='Zabawa'){
         
-		//echo '<form id="forma" action="account.php?q=1&kat='.$Wyb_kat.' " method="POST"  class="form-horizontal"><br />';
+		echo '<form id="forma" action="account.php?q=1&kat='.$Wyb_kat.' " method="POST"  class="form-horizontal"><br />';
 		
-		//echo '<form id="qform" action="update.php?q=quiz&step=2&eid=' . $eid . '&n=' . $sn . '&t=' . $total . '&qid=' . $qid . '" method="POST"  class="form-horizontal"><br />';
-		
-		
+		echo '<form id="qform" action="update.php?q=quiz&step=2&eid=' . $eid . '&n=' . $sn . '&t=' . $total . '&qid=' . $qid . '" method="POST"  class="form-horizontal"><br />';
 		
 		
 		
-        //echo '<a href="account.php?q=1&kat=Zabawa"></a>';
-		//echo '<a href="account.php?q=1&kat=". $Wyb_kat.></a>';
+		
+		
+        echo '<a href="account.php?q=1&kat=Zabawa"></a>';
+		echo '<a href="account.php?q=1&kat=". $Wyb_kat.></a>';
 		echo '<a href="account.php?q=1&kat=' . $Wyb_kat.'></a>';
 	}
 else {echo 'no i kij wywaliło sie';}
     
-}*/
+}
 	
-	
+	*/
 	
 	
 //Tutaj trzeba dodać osobny if dla każdej nowej kategorii
-	if (/*@$_GET['q'] == 1 AND*/ @$_GET['Wyb_kat'] == 'Zabawa'){$result = mysqli_query($con, "SELECT * FROM quiz WHERE status = 'enabled' AND `Kategoria`='Zabawa' ORDER BY date DESC") or die('Error');}
+	if (@$_GET['q'] == 1 AND @$_GET['Wyb_kat'] == 'Zabawa'){$result = mysqli_query($con, "SELECT * FROM quiz WHERE status = 'enabled' AND `Kategoria`='Zabawa' ORDER BY date DESC") or die('Error');}
     else $result = mysqli_query($con, "SELECT * FROM quiz WHERE status = 'enabled' ORDER BY date DESC") or die('Error');
     echo '<div class="panel"><table class="table table-striped title1"  style="vertical-align:middle">
-<tr><td style="vertical-align:middle"><b>S.N.</b></td><td style="vertical-align:middle"><b>Name</b></td><td style="vertical-align:middle"><b>Total question</b></td><td style="vertical-align:middle"><b>Correct Answer</b></td><td style="vertical-align:middle"><b>Wrong Answer</b></td><td style="vertical-align:middle"><b>Total Marks</b></td><td style="vertical-align:middle"><b>Time limit</b></td><td style="vertical-align:middle"><b>Action</b></td></tr>';
+<tr><td style="vertical-align:middle"><b>S.N.</b></td><td style="vertical-align:middle"><b>Name</b></td><td style="vertical-align:middle"><b>Total question</b></td><td style="vertical-align:middle"><b>Correct Answer</b></td><td style="vertical-align:middle"><b>Wrong Answer</b></td><td style="vertical-align:middle"><b>Total Marks</b></td><td style="vertical-align:middle"><b>Time limit</b></td><td style="vertical-align:middle"><b>Kategoria</b></td><td style="vertical-align:middle"><b>Action</b></td></tr>';
     $c = 1;
     while ($row = mysqli_fetch_array($result)) {
         $title   = $row['title'];
@@ -162,10 +162,11 @@ else {echo 'no i kij wywaliło sie';}
         $wrong   = $row['wrong'];
         $time    = $row['time'];
         $eid     = $row['eid'];
+		$Kat	 = $row['Kategoria'];
         $q12 = mysqli_query($con, "SELECT score FROM history WHERE eid='$eid' AND username='$username'") or die('Error98');
         $rowcount = mysqli_num_rows($q12);
         if ($rowcount == 0) {
-            echo '<tr><td style="vertical-align:middle">' . $c++ . '</td><td style="vertical-align:middle">' . $title . '</td><td style="vertical-align:middle">' . $total . '</td><td style="vertical-align:middle">+' . $correct . '</td><td style="vertical-align:middle">-' . $wrong . '</td><td style="vertical-align:middle">' . $correct * $total . '</td><td style="vertical-align:middle">' . $time . '&nbsp;min</td>
+            echo '<tr><td style="vertical-align:middle">' . $c++ . '</td><td style="vertical-align:middle">' . $title . '</td><td style="vertical-align:middle">' . $total . '</td><td style="vertical-align:middle">+' . $correct . '</td><td style="vertical-align:middle">-' . $wrong . '</td><td style="vertical-align:middle">' . $correct * $total . '</td><td style="vertical-align:middle">' . $time . '&nbsp;min</td>   <td style="vertical-align:middle">' . $Kat . '&nbsp;</td>
   <td style="vertical-align:middle"><b><a href="account.php?q=quiz&step=2&eid=' . $eid . '&n=1&t=' . $total . '&start=start" class="btn" style="color:#FFFFFF;background:darkgreen;font-size:12px;padding:7px;padding-left:10px;padding-right:10px"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span><b>Start</b></span></a></b></td></tr>';
         } else {
             $q = mysqli_query($con, "SELECT * FROM history WHERE username='$_SESSION[username]' AND eid='$eid' ") or die('Error197');
@@ -180,10 +181,10 @@ else {echo 'no i kij wywaliło sie';}
             }
             $remaining = (($ttimec * 60) - ((time() - $timec)));
             if ($remaining > 0 && $qstatus == "enabled" && $status == "ongoing") {
-                echo '<tr style="color:darkgreen"><td style="vertical-align:middle">' . $c++ . '</td><td style="vertical-align:middle">' . $title . '&nbsp;<span title="This quiz is already solve by you" class="glyphicon glyphicon-ok" aria-hidden="true"></span></td><td style="vertical-align:middle">' . $total . '</td><td style="vertical-align:middle">+' . $correct . '</td><td style="vertical-align:middle">-' . $wrong . '</td><td style="vertical-align:middle">' . $correct * $total . '</td><td style="vertical-align:middle">' . $time . '&nbsp;min</td>
+                echo '<tr style="color:darkgreen"><td style="vertical-align:middle">' . $c++ . '</td><td style="vertical-align:middle">' . $title . '&nbsp;<span title="This quiz is already solve by you" class="glyphicon glyphicon-ok" aria-hidden="true"></span></td><td style="vertical-align:middle">' . $total . '</td><td style="vertical-align:middle">+' . $correct . '</td><td style="vertical-align:middle">-' . $wrong . '</td><td style="vertical-align:middle">' . $correct * $total . '</td><td style="vertical-align:middle">' . $time . '&nbsp;min</td> <td style="vertical-align:middle">' . $Kat . '&nbsp;</td>
   <td style="vertical-align:middle"><b><a href="account.php?q=quiz&step=2&eid=' . $eid . '&n=1&t=' . $total . '&start=start" class="btn" style="margin:0px;background:darkorange;color:white">&nbsp;<span class="title1"><b>Continue</b></span></a></b></td></tr>';
             } else {
-                echo '<tr style="color:darkgreen"><td style="vertical-align:middle">' . $c++ . '</td><td style="vertical-align:middle">' . $title . '&nbsp;<span title="This quiz is already solve by you" class="glyphicon glyphicon-ok" aria-hidden="true"></span></td><td style="vertical-align:middle">' . $total . '</td><td style="vertical-align:middle">+' . $correct . '</td><td style="vertical-align:middle">-' . $wrong . '</td><td style="vertical-align:middle">' . $correct * $total . '</td><td style="vertical-align:middle">' . $time . '&nbsp;min</td>
+                echo '<tr style="color:darkgreen"><td style="vertical-align:middle">' . $c++ . '</td><td style="vertical-align:middle">' . $title . '&nbsp;<span title="This quiz is already solve by you" class="glyphicon glyphicon-ok" aria-hidden="true"></span></td><td style="vertical-align:middle">' . $total . '</td><td style="vertical-align:middle">+' . $correct . '</td><td style="vertical-align:middle">-' . $wrong . '</td><td style="vertical-align:middle">' . $correct * $total . '</td><td style="vertical-align:middle">' . $time . '&nbsp;min</td> <td style="vertical-align:middle">' . $Kat . '&nbsp;</td>
   <td style="vertical-align:middle"><b><a href="account.php?q=result&eid=' . $eid . '" class="btn" style="margin:0px;background:darkred;color:white">&nbsp;<span class="title1"><b>View Result</b></span></a></b></td></tr>';
             }
         }
@@ -461,10 +462,12 @@ if (@$_GET['q'] == 'result' && @$_GET['eid']) {
         $w      = $row['wrong'];
         $r      = $row['correct'];
         $status = $row['status'];
+		//$Kat	 = $row['Kategoria'];
     }
     if ($status == "finished") {
         echo '<div class="panel">
 <center><h1 class="title" style="color:#660033">Result</h1><center><br /><table class="table table-striped title1" style="font-size:20px;font-weight:1000;">';
+
         echo '<tr style="color:darkblue"><td style="vertical-align:middle">Total Questions</td><td style="vertical-align:middle">' . $total . '</td></tr>
       <tr style="color:darkgreen"><td style="vertical-align:middle">Correct Answer&nbsp;<span class="glyphicon glyphicon-ok-arrow" aria-hidden="true"></span></td><td style="vertical-align:middle">' . $r . '</td></tr> 
     <tr style="color:red"><td style="vertical-align:middle">Wrong Answer&nbsp;<span class="glyphicon glyphicon-remove-arrow" aria-hidden="true"></span></td><td style="vertical-align:middle">' . $w . '</td></tr>
